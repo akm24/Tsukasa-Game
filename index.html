@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="A walkable pixel-art preview of TSUKASA, a Japanese select shop, café and tea room."><style>body{margin:0;font:14px system-ui,sans-serif}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>TSUKASA Walkabout</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+JP:wght@500;700&family=Pixelify+Sans:wght@400;500;600&family=Silkscreen&display=swap">
+<style>
+/* Layout: one screen. Thin wordmark header; the game at 16:10 fills the left; a narrow paper column on the right holds stamp card, floor plan, noticed list. */
+:root{--paper:#efe9dd;--paper2:#e6e1d3;--line:#cbc3b1;--ink:#23211b;--mute:#6f6a5c;--olive:#5e6a4a;--red:#b13a2c;--wal:#6e4a2e;--key:#23211b;--keyfg:#efe9dd;
+--f-word:'Cormorant Garamond',Georgia,'Times New Roman',serif;--f-talk:'Pixelify Sans','Courier New',monospace;--f-label:'Silkscreen','Courier New',monospace;--f-jp:'Noto Serif JP','Hiragino Mincho ProN',serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#1d1b18;--paper2:#272421;--line:#423c35;--ink:#e6e1d3;--mute:#9c9585;--olive:#8f9d73;--red:#d2573f;--wal:#b08a62;--key:#e6e1d3;--keyfg:#1d1b18;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#1d1b18;--paper2:#272421;--line:#423c35;--ink:#e6e1d3;--mute:#9c9585;--olive:#8f9d73;--red:#d2573f;--wal:#b08a62;--key:#e6e1d3;--keyfg:#1d1b18;color-scheme:dark}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-talk);overflow:hidden}
+.app{height:100%;box-sizing:border-box;display:grid;grid-template-rows:auto minmax(0,1fr);gap:8px;padding-block:8px 10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;align-items:baseline;gap:16px;border-bottom:1px solid var(--line);padding-bottom:5px;flex-wrap:wrap}
+.wm{font-family:var(--f-word);font-size:25px;line-height:1;letter-spacing:.44em;font-weight:500;margin:0;white-space:nowrap}
+.wm b{font-family:var(--f-jp);color:var(--red);letter-spacing:0;font-weight:700;font-size:.8em}
+.tagl{font-family:var(--f-word);font-style:italic;font-size:15px;color:var(--mute);margin:0}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 262px;gap:14px;min-height:0}
+.stage{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;min-height:0}
+#wrap{position:relative;background:#1b1917;overflow:hidden;box-shadow:0 0 0 1px var(--ink);max-width:100%;--u:2px;user-select:none;-webkit-user-select:none;touch-action:manipulation;flex:none}
+#c{position:absolute;inset:0;width:100%;height:100%;display:block}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px;font-family:var(--f-label);font-size:10px;color:var(--mute);min-height:22px;box-sizing:border-box;max-width:100%}
+.bar span{white-space:nowrap}
+kbd{font-family:var(--f-label);font-size:9px;background:var(--key);color:var(--keyfg);padding:1px 5px;border-radius:2px;margin-right:2px}
+.bar button{margin-left:auto;font-family:var(--f-label);font-size:10px;background:none;color:var(--ink);border:1px solid var(--line);padding:2px 8px;cursor:pointer;border-radius:2px}
+.bar button:hover{border-color:var(--ink)}
+button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.side{display:flex;flex-direction:column;gap:10px;min-height:0;min-width:0}
+.card{border:1px solid var(--line);background:var(--paper2);padding:8px 10px 10px}
+.card h2{font-family:var(--f-label);font-weight:400;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 7px;display:flex;justify-content:space-between;color:var(--mute)}
+.card h2 em{font-style:normal;color:var(--ink)}
+.stamps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 4px}
+.st{display:flex;flex-direction:column;align-items:center;gap:3px}
+.seal{width:42px;height:42px;border-radius:50%;border:1.5px dashed var(--line);display:grid;place-items:center;font-family:var(--f-jp);font-size:21px;line-height:1;color:var(--line);box-sizing:border-box}
+.st small{font-family:var(--f-label);font-size:8px;color:var(--mute);letter-spacing:.04em}
+.st.got .seal{border:2.5px solid var(--red);color:var(--red);font-weight:700;transform:rotate(var(--r,-6deg));box-shadow:inset 0 0 0 2px var(--paper2),inset 0 0 0 3px var(--red)}
+.st.got small{color:var(--ink)}
+.st.new .seal{animation:press .55s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes press{0%{transform:scale(2) rotate(var(--r,-6deg));opacity:0}55%{transform:scale(.88) rotate(var(--r,-6deg));opacity:1}100%{transform:scale(1) rotate(var(--r,-6deg))}}
+.stamps.off{opacity:.4;filter:grayscale(1)}
+.plan .map{position:relative;height:150px;aspect-ratio:40/38;margin:0 auto;box-shadow:0 0 0 1px var(--line)}
+.plan canvas{width:100%;height:100%;display:block;image-rendering:pixelated}
+.plan .dot{position:absolute;width:7px;height:7px;margin:-3.5px;border-radius:50%;background:var(--red);box-shadow:0 0 0 1.5px #efe9dd}
+.plan .lb{position:absolute;font-family:var(--f-label);font-size:7px;color:#23211b;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;letter-spacing:.03em}
+.plan .lb.w{color:#efe9dd}
+.loc{height:18px;line-height:18px;margin-top:7px;text-align:center;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loc b{font-family:var(--f-jp);color:var(--red);font-size:12px;margin-left:5px}
+.seen{flex:1;min-height:60px;display:flex;flex-direction:column}
+.seen ul{list-style:none;margin:0;padding:0;overflow:auto;flex:1;min-height:0;font-size:13px;line-height:1.35}
+.seen li{padding:2px 0;border-bottom:1px dotted var(--line)}
+.seen li.none{color:var(--mute);border:0;font-family:var(--f-word);font-style:italic;font-size:14px}
+/* in-game overlays: one visual world, sized in --u (1 game pixel) */
+#wrap .ov{position:absolute;z-index:2}
+#bubble{max-width:calc(var(--u)*236);min-width:calc(var(--u)*96);box-sizing:border-box;background:#f6f1e4;color:#23211b;border:calc(var(--u)*1.5) solid #23211b;border-radius:calc(var(--u)*5);padding:calc(var(--u)*8) calc(var(--u)*9) calc(var(--u)*6);font-size:calc(var(--u)*10.5);line-height:1.22;box-shadow:0 calc(var(--u)*2) 0 rgba(35,33,27,.4)}
+#bubble .nm{position:absolute;top:calc(var(--u)*-7);left:calc(var(--u)*7);background:#23211b;color:#f6f1e4;font-family:var(--f-label);font-size:calc(var(--u)*6.5);padding:calc(var(--u)*1.5) calc(var(--u)*5);border-radius:calc(var(--u)*2);letter-spacing:.06em;text-transform:uppercase}
+#bubble .tail{position:absolute;top:100%;left:var(--tx,50%);margin-left:calc(var(--u)*-5);border-left:calc(var(--u)*5) solid transparent;border-right:calc(var(--u)*5) solid transparent;border-top:calc(var(--u)*7) solid #23211b}
+#bubble .tail::after{content:"";position:absolute;left:calc(var(--u)*-3.2);top:calc(var(--u)*-8.4);border-left:calc(var(--u)*3.2) solid transparent;border-right:calc(var(--u)*3.2) solid transparent;border-top:calc(var(--u)*5) solid #f6f1e4}
+.txt{white-space:pre-wrap;min-height:1.2em}
+.more{display:inline-block;margin-left:.3em;color:#b13a2c;animation:bob .7s steps(2) infinite}
+@keyframes bob{50%{transform:translateY(calc(var(--u)*1.5))}}
+.ch{list-style:none;margin:calc(var(--u)*5) 0 0;padding:0}
+.ch li{padding:calc(var(--u)*1.5) calc(var(--u)*5);border-radius:calc(var(--u)*2);cursor:pointer}
+.ch li::before{content:"\25B8";margin-right:.4em;opacity:0}
+.ch li.sel{background:#23211b;color:#f6f1e4}
+.ch li.sel::before{opacity:1;color:#e0a23a}
+#narr{left:7%;right:7%;bottom:5%;background:rgba(30,28,24,.93);color:#f1ebdc;border:calc(var(--u)*1) solid rgba(241,235,220,.35);border-radius:calc(var(--u)*3);padding:calc(var(--u)*7) calc(var(--u)*10);font-size:calc(var(--u)*10.5);line-height:1.25}
+#hint{transform:translate(-50%,-100%);background:#23211b;color:#f6f1e4;font-family:var(--f-label);font-size:calc(var(--u)*6.5);padding:calc(var(--u)*1.5) calc(var(--u)*4);border-radius:calc(var(--u)*2);white-space:nowrap;pointer-events:none}
+#hint b{color:#e0a23a;font-weight:400;margin-right:.35em}
+#banner{top:6%;left:50%;transform:translateX(-50%);background:rgba(246,241,228,.94);color:#23211b;padding:calc(var(--u)*3) calc(var(--u)*12);font-size:calc(var(--u)*11);border-top:calc(var(--u)*1) solid #23211b;border-bottom:calc(var(--u)*1) solid #23211b;white-space:nowrap;opacity:0;transition:opacity .4s;pointer-events:none}
+#banner.on{opacity:1}
+#banner b{font-family:var(--f-jp);color:#b13a2c;margin-left:.5em;font-size:.9em}
+#title{inset:0;display:grid;place-content:center;justify-items:center;text-align:center;color:#f6f1e4;background:linear-gradient(rgba(27,25,23,.5),rgba(27,25,23,.2) 45%,rgba(27,25,23,.6));cursor:pointer;gap:calc(var(--u)*4)}
+#title h3{font-family:var(--f-word);font-weight:500;font-size:calc(var(--u)*34);letter-spacing:.4em;margin:0 0 0 .4em;text-shadow:0 calc(var(--u)*1) calc(var(--u)*6) rgba(0,0,0,.6)}
+#title p{margin:0;font-family:var(--f-word);font-style:italic;font-size:calc(var(--u)*13)}
+#title .go{margin-top:calc(var(--u)*26);font-family:var(--f-label);font-style:normal;font-size:calc(var(--u)*7);letter-spacing:.1em;animation:blink 1.4s steps(2) infinite}
+@keyframes blink{50%{opacity:.35}}
+#finale{inset:0;display:grid;place-items:center;background:rgba(27,25,23,.62)}
+.fc{background:#f6f1e4;color:#23211b;border:calc(var(--u)*1.5) solid #23211b;padding:calc(var(--u)*12) calc(var(--u)*18);text-align:center;max-width:76%}
+.fc h3{font-family:var(--f-word);font-weight:600;font-size:calc(var(--u)*17);margin:0 0 calc(var(--u)*2)}
+.fc p{font-size:calc(var(--u)*9.5);margin:0 0 calc(var(--u)*8);line-height:1.25}
+.fc .row{display:flex;gap:calc(var(--u)*6);justify-content:center;margin-bottom:calc(var(--u)*10)}
+.fc .row i{font-style:normal;font-family:var(--f-jp);font-weight:700;color:#b13a2c;width:calc(var(--u)*24);height:calc(var(--u)*24);border:calc(var(--u)*1.6) solid #b13a2c;border-radius:50%;display:grid;place-items:center;font-size:calc(var(--u)*13);line-height:1}
+.fc .row i:nth-child(odd){transform:rotate(-7deg)}.fc .row i:nth-child(even){transform:rotate(5deg)}
+.fc button{font-family:var(--f-label);font-size:calc(var(--u)*7);background:#23211b;color:#f6f1e4;border:0;padding:calc(var(--u)*4) calc(var(--u)*12);cursor:pointer}
+#pad{display:none;width:100%;justify-content:space-between;align-items:center;padding:6px 4px;box-sizing:border-box;touch-action:none;user-select:none;-webkit-user-select:none}
+.dp{display:grid;grid-template-columns:repeat(3,46px);grid-template-rows:repeat(3,46px)}
+#pad button{font-family:var(--f-label);font-size:15px;background:var(--paper2);color:var(--ink);border:1.5px solid var(--ink);border-radius:8px;touch-action:none}
+#pad button.on{background:var(--ink);color:var(--paper)}
+.ab{display:flex;gap:12px;align-items:center}
+.ab button{width:58px;height:58px;border-radius:50%!important}
+.touch #pad{display:flex}
+.touch .kb{display:none}
+@media (max-width:820px){html,body{height:auto}body{overflow:auto}.app{height:auto;display:block}.main{display:block}.stage{margin:8px 0 12px}.side{gap:10px}.seen ul{max-height:150px}.wm{font-size:21px}header{gap:4px 12px}}
+@media (min-width:821px) and (max-height:720px){.plan .map{height:118px}.seal{width:36px;height:36px;font-size:18px}.card{padding:6px 10px 7px}.side{gap:7px}}
+@media (prefers-reduced-motion:reduce){.more,#title .go{animation:none}}
+</style>
+</head><body>
+<div class="app">
+<header><h1 class="wm">TSUKASA <b>司</b></h1><p class="tagl">A gateway to Japan</p></header>
+<div class="main">
+<div class="stage">
+<div id="wrap">
+<canvas id="c" width="960" height="600"></canvas>
+<div id="hint" class="ov" hidden></div>
+<div id="bubble" class="ov" hidden><span class="nm"></span><div class="txt"></div><ul class="ch" hidden></ul><i class="tail"></i></div>
+<div id="narr" class="ov" hidden><div class="txt"></div></div>
+<div id="banner" class="ov"></div>
+<div id="finale" class="ov" hidden><div class="fc"><h3>Stamp card complete</h3><p>Six stamps, from the front door to the tea room. See you in Venice.</p><div class="row"><i>藍</i><i>刃</i><i>土</i><i>灯</i><i>茶</i><i>和</i></div><button id="keep" type="button">Keep wandering</button></div></div>
+<div id="title" class="ov"><h3>TSUKASA</h3><p>Venice, Los Angeles</p><p class="go">Press Enter or tap to cross the street</p></div>
+</div>
+<div class="bar"><span class="kb"><kbd>Arrows</kbd><kbd>WASD</kbd> walk</span><span class="kb"><kbd>Z</kbd><kbd>Enter</kbd><kbd>Space</kbd> talk / look</span><span class="kb"><kbd>X</kbd><kbd>Shift</kbd> hold to walk faster</span><button id="snd" type="button">Sound on</button></div>
+<div id="pad"><div class="dp"><span></span><button data-k="up" type="button">▲</button><span></span><button data-k="left" type="button">◀</button><span></span><button data-k="right" type="button">▶</button><span></span><button data-k="down" type="button">▼</button><span></span></div><div class="ab"><button data-k="run" type="button">B</button><button data-k="act" type="button">A</button></div></div>
+</div>
+<aside class="side">
+<section class="card"><h2>Stamp card <em id="cnt">Not yet</em></h2><div class="stamps off" id="stamps"></div></section>
+<section class="card plan"><h2>Floor plan</h2><div class="map"><canvas id="mini" width="160" height="152"></canvas><span class="lb" style="left:21%;top:20%">TEA</span><span class="lb" style="left:42%;top:17.5%">SEATING</span><span class="lb" style="left:60%;top:24%">CAFÉ</span><span class="lb" style="left:36%;top:47%">SHOP</span><span class="lb w" style="left:30%;top:5.5%">ALLEY</span><i class="dot" id="dot"></i></div><div class="loc" id="loc">Abbot Kinney Blvd</div></section>
+<section class="card seen"><h2>Noticed <em id="scnt"></em></h2><ul id="seen"><li class="none">Nothing yet. Face something and press the talk / look key.</li></ul></section>
+</aside>
+</div>
+</div>
+<script src="a.js"></script><script src="b.js"></script><script src="c.js"></script>
+</body></html>
